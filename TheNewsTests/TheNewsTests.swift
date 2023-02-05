@@ -5,31 +5,71 @@
 //  Created by Найдан Тактал on 05.02.2023.
 //
 
+
 import XCTest
+
 @testable import TheNews
 
-final class TheNewsTests: XCTestCase {
+class TheNewsTests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+
+
+        UserDefaults.standard.removeObject(forKey: Settings.CategoryKey)
+        UserDefaults.standard.removeObject(forKey: Settings.StyleKey)
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testUserDefaultsPropertyWrapperDefaultSetter() throws {
+        let value = UserDefaultsConfig.savedCategory
+
+        XCTAssertTrue(value.rawValue == Settings.CategoryDefault.rawValue)
+    }
+
+    func testUserDefaultsPropertyWrapperSetter() throws {
+        let category = NewsCategory.entertainment
+        UserDefaultsConfig.savedCategory = category
+
+        let value = UserDefaultsConfig.savedCategory
+        XCTAssertTrue(value.rawValue == category.rawValue)
+    }
+
+    func testDefaultConfiguration() throws {
+        let settings = Settings()
+
+        XCTAssertTrue(settings.category.rawValue == Settings.CategoryDefault.rawValue)
+        XCTAssertTrue(settings.style.rawValue == Settings.StyleDefault.rawValue)
+    }
+
+    func testViewStyleIsTable() {
+        let style = NewsViewModel.Style.cnn
+
+        XCTAssertFalse(style.isTable)
+    }
+
+    func testChangingCategoryConfiguration() throws {
+        var settings = Settings()
+
+        let category = NewsCategory.business
+        settings.category = category
+
+        XCTAssertTrue(settings.category.rawValue == category.rawValue)
+    }
+
+    func testChangingStyleConfiguration() throws {
+        var settings = Settings()
+
+        let style = NewsViewModel.Style.cnn
+        settings.style = style
+
+        XCTAssertTrue(settings.style.rawValue == style.rawValue)
     }
 
     func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        measure {
         }
     }
 
